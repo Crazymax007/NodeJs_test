@@ -130,6 +130,9 @@ io.on("connection", (socket) => {
 const v1IndexRouter = require("./routes/v1/indexRoutes");
 app.use("/api/v1", v1IndexRouter);
 
+const v1IndexRouter2 = require("./routes/v1/indexRoutes");
+app.use("/", v1IndexRouter2);
+
 //? Auth Endpoints
 const v1AuthRouter = require("./routes/v1/authRoutes");
 app.use("/api/v1/auth", v1AuthRouter);
