@@ -30,7 +30,7 @@ router.post("/register", registerRateLimiter, register);
 router.post("/login", loginRateLimiter, login);
 
 //? Logout
-router.post("/logout", loginRateLimiter, logout);
+router.post("/logout" ,verifyAccessToken, logout);
 
 router.post("/refresh", verifyRefreshToken, refresh);
 

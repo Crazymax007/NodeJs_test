@@ -53,6 +53,7 @@ const verifyAccessToken = async (req, res, next) => {
         message: "TOKEN is required for authentication",
       });
     const accessToken = req.headers["authorization"].replace("Bearer ", "");
+    console.log("h:",accessToken)
 
     jwt.verify(accessToken, JWT_ACCESS_TOKEN_SECRET, async (err, decoded) => {
       if (err) {
@@ -66,6 +67,8 @@ const verifyAccessToken = async (req, res, next) => {
           `Hardware_ID_${decoded.userId}`,
           req.headers["hardware-id"]
         );
+        console.log("mac",MacAddressIsMember);
+        console.log("hardware",hardwareIdIsMember);
 
         if (!MacAddressIsMember && !hardwareIdIsMember) {
           return res.status(401).send({
@@ -82,8 +85,10 @@ const verifyAccessToken = async (req, res, next) => {
             .send({ status: "error", message: "Hardware ID does not exist!" });
         }
         const lastAccessToken = await redis.get(
-          `Last_Access_Token_${decoded.userId}_${req.headers["hardware-id"]}`
+          `Last_Access_Token_${decoded.userId}_${req.headers["device-fingerprint"]}`
         );
+        
+        
         if (lastAccessToken !== accessToken) {
           return res
             .status(401)

@@ -188,7 +188,7 @@ const login = async (req, res, next) => {
         }
 
         const foundUserEmail = foundUser.user.email;
-        const foundUserId = foundUser.userId;
+        const foundUserId = foundUser.id;
 
         const accessToken = jwt.sign(
           {
@@ -216,6 +216,8 @@ const login = async (req, res, next) => {
         );
 
         redis.set(`Last_Login_${foundUserId}_${deviceFingerprint}`, Date.now());
+        redis.sAdd(`Mac_Address_${foundUserId}`, req.headers["mac-address"]);
+        redis.sAdd(`Hardware_ID_${foundUserId}`, req.headers["hardware-id"]);
 
         let length = 6,
           charset = "0123456789",
@@ -317,11 +319,10 @@ const logout = async (req, res, next) => {
   try {
     // Find user by userId
     const foundUser = await User.findById(userId);
-
     if (!foundUser) {
       return res
         .status(404)
-        .send({ status: "error", message: "User not found" });
+        .send({ status: "error", message: "User not found1" });
     }
 
     // Remove device from loggedInDevices
